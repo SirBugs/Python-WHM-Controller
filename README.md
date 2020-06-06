@@ -1,6 +1,6 @@
 # Python-WHM-Controller
 
-New Version Of .Py WHM Controller
+- New Version Of .Py WHM Controller
 
 ```
 >>> ================================================================ <<<
@@ -16,6 +16,7 @@ New Version Of .Py WHM Controller
 >>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ <<<
 ```
 
+### How To Setup & Use:
 ```bash
 $ pip install requests
 ```
