@@ -41,6 +41,14 @@ $ python Insta.py
   - Enter Your WHM CPanel Password.
   - Enter Password To Change Cpanels To.
 
+### Domains File Path:
+- The Domains File Path Have To Be Like:
+```bash
+test1.com
+test2.com
+test3.com
+```
+
 # FAQ
 [❓]: Which python version do i need?     
 [A]:  Python 2.7  
@@ -57,7 +65,7 @@ $ python Insta.py
 **06/06/2020:** Second Edition [Improved Creating Cpanels SYS *No Errors* + Added All WHM Cpanels Password Changer]. 😃
 
 # Contacting
-**Facebook:** https://facebook.com/SIRBUGS  :point_left:  
+**Facebook:** https://facebook.com/SIRBUGS
 Made with ❤️ in Egypt
 
 Programmed By SIRBUGS ❤️
