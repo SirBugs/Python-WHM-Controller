@@ -23,6 +23,8 @@ $ pip install requests
 ```bash
 $ pip install colorama
 ```
+# Run
+
 ```bash
 $ python Insta.py
 ```
