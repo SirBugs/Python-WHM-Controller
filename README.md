@@ -12,7 +12,6 @@
 >>> |____/ \____/ \_____|_____/      \/  \/   |_|  |_|_|  |_|        <<<
 >>> ================================================================ <<<
 >>> Bugs New WHM Manager v2.0 @2020.                                 <<<
->>> Made With Love For Xleet & Olux Sellers.                         <<<
 >>> ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ <<<
 ```
 
@@ -47,21 +46,18 @@ $ python Insta.py
 [A]:  Python 2.7  
 
 [❓]: Im not getting any Results?     
-[A]:  Check Your Internet Connection
+[A]:  Check Your Internet Connection Or Ur Py Compiler Is Working Fine.
 
-[❓]: The Script Is Spamming (Login Failed)?     
-[A]:  Check Your Emails Path. 
+[❓]: The Passwords Can Be Randomed?
+[A]:  No After Any Password The Script Generates A Random Number Between 1:999.
 
 # Come Out & Updates
-**22/05/2019:** First come out of the script (Beta) V1.0. 😃
+**09/06/2019:** First come out of the script (Beta) V1.0. 😃
 
-**04/06/2019:** Updates: Auto caputring for random X-CSRF-TOKEN V1.1. 😃
-
-**22/06/2019:** Updates: Fixed report tool, Fixed cookies arguments errors V1.2. 😃
+**06/06/2020:** Second Edition [Improved Creating Cpanels SYS *No Errors* + Added All WHM Cpanels Password Changer]. 😃
 
 # Contacting
 **Facebook:** https://facebook.com/SIRBUGS  :point_left:  
 Made with ❤️ in Egypt
 
 Programmed By SIRBUGS ❤️
-  
