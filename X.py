@@ -180,7 +180,7 @@ print '{} | |_) | |  | | |  __| (___    \ \  /\  / /| |__| | \  / |'.format(RED)
 print '{} |  _ <| |  | | | |_ |\___ \    \ \/  \/ / |  __  | |\/| |'.format(WHITE); time.sleep(0.1)
 print '{} | |_) | |__| | |__| |____) |    \  /\  /  | |  | | |  | |'.format(RED); time.sleep(0.1)
 print '{} |____/ \____/ \_____|_____/      \/  \/   |_|  |_|_|  |_|\n'.format(WHITE); time.sleep(0.1)
-print '{} -| {}Bugs {}New {}WHM Manager {}v2.0 {}@2020{}.'.format(WHITE, RED, WHITE, RED, RED, WHITE, RED, WHITE); time.sleep(0.1)
+print '{} -| {}Bugs {}New {}WHM Manager {}v3.0 {}@2020{}.'.format(WHITE, RED, WHITE, RED, RED, WHITE, RED, WHITE); time.sleep(0.1)
 print '{} -| {}Made {}With {}Love For {}Xleet{} & {}Olux {}Sellers.\n'.format(WHITE, RED, WHITE, RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
 
 print '{} -| {}1{} | {}Create New Cpanels{}.'.format(RED, WHITE, RED, WHITE, RED); time.sleep(0.1)
