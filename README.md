@@ -26,7 +26,7 @@ $ pip install colorama
 # Run
 
 ```bash
-$ python Insta.py
+$ python X.py
 ```
 
 # Usage
@@ -42,6 +42,9 @@ $ python Insta.py
   - Enter 'root' Or Log Username.
   - Enter Your WHM CPanel Password.
   - Enter Password To Change Cpanels To.
+- Third Tool [Cpanels Password Change [Cpanels]] [2]
+  - Enter Your Cpanel File [https://test.com:2083/|username|password].
+  - Enter Password To Change Cpanels To.
 
 ### Domains File Path:
 - The Domains File Path Have To Be Like:
@@ -49,6 +52,14 @@ $ python Insta.py
 test1.com
 test2.com
 test3.com
+```
+
+### Cpanels File Path:
+- The Cpanels File Path Have To Be Like:
+```bash
+https://test1.com:2083/|username1|password1
+https://test2.com:2083/|username2|password2
+https://test3.com:2083/|username3|password3
 ```
 
 # FAQ
@@ -66,9 +77,11 @@ test3.com
 
 **06/06/2020:** Second Edition [Improved Creating Cpanels SYS *No Errors* + Added All WHM Cpanels Password Changer]. 😃
 
+**09/09/2020:** Third Edition [Used Sessions To Improve Working + Added Cpanels Password Changer From Cpanels]. 😃
+
 # Contacting
 **Facebook:** https://facebook.com/SIRBUGS
 
 Made with ❤️ in Egypt
 
-Programmed By SIRBUGS ❤️
+Coded By SIRBUGS ❤️
